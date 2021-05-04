@@ -45,9 +45,12 @@ rand = {version = "0.8", optional = true}
 dmsort = {version = "1.0.0", optional = true }
 toml-dep = { version = "0.5.8", package="toml", optional = true }
 aho-corasick = { version = "0.7.18", optional = true}
+simple-logging = { version = "2.0.2", optional = true}
+log = { version = "0.4.14", optional = true }
+log-panics = { version = "2", features = ["with-backtrace"], optional = true }
 
 [features]
-default = ["acreplace", "cellularnoise", "dmi", "file", "git", "http", "json", "log", "noise", "sql", "time", "toml", "url"]
+default = ["acreplace", "cellularnoise", "dmi", "file", "git", "http", "json", "logf", "noise", "sql", "time", "toml", "url", "feature-log-panics"]
 
 # default features
 acreplace = ["aho-corasick"]
@@ -57,11 +60,12 @@ file = []
 git = ["git2", "chrono"]
 http = ["reqwest", "serde", "serde_json", "once_cell", "jobs"]
 json = ["serde", "serde_json"]
-log = ["chrono"]
+logf = ["chrono"]
 sql = ["mysql", "serde", "serde_json", "once_cell", "dashmap", "jobs"]
 time = []
 toml = ["serde", "serde_json", "toml-dep"]
 url = ["url-dep", "percent-encoding"]
+feature-log-panics = ["log", "simple-logging", "log-panics"]
 
 # additional features
 hash = ["base64", "const-random", "md-5", "hex", "sha-1", "sha2",  "twox-hash", "serde", "serde_json"]

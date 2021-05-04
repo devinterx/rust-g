@@ -1,5 +1,14 @@
 #![forbid(unsafe_op_in_unsafe_fn)]
 
+#[cfg(feature = "feature-log-panics")]
+extern crate simple_logging;
+
+#[cfg(feature = "feature-log-panics")]
+extern crate log_panics;
+
+#[cfg(feature = "feature-log-panics")]
+mod log_init;
+
 #[macro_use]
 mod byond;
 #[allow(dead_code)]
@@ -24,7 +33,7 @@ pub mod hash;
 pub mod http;
 #[cfg(feature = "json")]
 pub mod json;
-#[cfg(feature = "log")]
+#[cfg(feature = "logf")]
 pub mod log;
 #[cfg(feature = "noise")]
 pub mod noise_gen;
@@ -45,3 +54,13 @@ pub mod worleynoise;
 
 #[cfg(not(target_pointer_width = "32"))]
 compile_error!("rust-g must be compiled for a 32-bit target");
+
+
+#[cfg(feature = "feature-log-panics")]
+#[no_mangle]
+extern "system" fn DllMain(_: *const u8, reason: u32, _: *const u8) -> u32 {
+    if reason == 1 { // DLL_PROCESS_ATTACH
+        log_init::log_init();
+    }
+    1 // TRUE means success
+}
