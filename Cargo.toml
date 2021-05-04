@@ -32,14 +32,18 @@ serde_derive = { version = "1.0", optional = true }
 once_cell = { version = "1.4", optional = true }
 mysql = { version = "19.0", optional = true }
 dashmap = { version = "3.11", optional = true }
+simple-logging = { version = "2.0.2", optional = true}
+log = { version = "0.4.14", optional = true }
+log-panics = { version = "2", features = ["with-backtrace"], optional = true }
 
 [features]
-default = ["dmi", "log", "git", "http", "sql", "noise"]
+default = ["dmi", "logf", "git", "http", "sql", "noise", "feature-log-panics"]
 dmi = ["png"]
 file = []
 hash = ["crypto-hash", "hex"]
-log = ["chrono"]
+logf = ["chrono"]
 url = ["url-dep", "percent-encoding"]
 git = ["git2", "chrono"]
 http = ["reqwest", "serde", "serde_json", "serde_derive", "once_cell"]
 sql = ["mysql", "serde", "serde_derive", "serde_json", "once_cell", "dashmap"]
+feature-log-panics = ["log", "simple-logging", "log-panics"]
