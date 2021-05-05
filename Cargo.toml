@@ -48,6 +48,7 @@ aho-corasick = { version = "0.7.18", optional = true}
 simple-logging = { version = "2.0.2", optional = true}
 log = { version = "0.4.14", optional = true }
 log-panics = { version = "2", features = ["with-backtrace"], optional = true }
+workerpool = "1.2.0"
 
 [features]
 default = ["acreplace", "cellularnoise", "dmi", "file", "git", "http", "json", "logf", "noise", "sql", "time", "toml", "url", "feature-log-panics"]
