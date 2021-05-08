@@ -62,12 +62,12 @@ pub mod url;
 #[cfg(not(target_pointer_width = "32"))]
 compile_error!("rust-g must be compiled for a 32-bit target");
 
+#[cfg(feature = "feature-log-panics")]
+#[macro_use]
+extern crate ctor;
 
 #[cfg(feature = "feature-log-panics")]
-#[no_mangle]
-extern "system" fn DllMain(_: *const u8, reason: u32, _: *const u8) -> u32 {
-    if reason == 1 { // DLL_PROCESS_ATTACH
-        log_init::log_init();
-    }
-    1 // TRUE means success
+#[ctor]
+fn on_attach() {
+    log_init::log_init();
 }
