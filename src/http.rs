@@ -184,9 +184,13 @@ byond_fn! { start_http_client() {
     Some("")
 } }
 
+
+use jobs::shutdown_workers;
+
 byond_fn! { shutdown_http_client() {
     HTTP_CLIENT.with(|cell| {
         cell.replace(None)
     });
+    shutdown_workers();
     Some("")
 } }
