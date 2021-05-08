@@ -25,7 +25,11 @@ struct Jobs {
 impl Jobs {
     fn start<F: FnOnce() -> Output + Send + 'static>(&mut self, f: F) -> JobId {
         let (tx, rx) = flume::unbounded();
-        self.pool.execute_to(tx, Thunk::of(|| f()));
+        if self.pool.queued_count() > self.pool.max_count() * 2 {
+            log::warn!("Job queue filling up (active {}, queued {})", self.pool.active_count(), self.pool.queued_count());
+        }
+
+        self.pool.execute_to(tx, Thunk::of(f));
         let id = self.next_job.to_string();
         self.next_job += 1;
         self.map.insert(id.clone(), Job { rx });
