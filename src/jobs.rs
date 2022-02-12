@@ -73,7 +73,7 @@ pub fn start<F: FnOnce() -> Output + Send + 'static>(f: F) -> JobId {
 
 }
 
-pub fn shutdown_workers() {
+byond_fn!(fn shutdown_workers() {
     JOBS.with(|opt|
         opt.take().map(|jobs| {
             log::info!("shutdown jobs workerpool (active {}, queued {})", jobs.pool.active_count(), jobs.pool.queued_count());
@@ -82,7 +82,8 @@ pub fn shutdown_workers() {
     );
 
     log::info!("shutdown jobs workerpool complete");
-}
+    Some("SUCCESS")
+});
 
 pub fn check(id: &str) -> String {
     JOBS.with(|jobs| {
