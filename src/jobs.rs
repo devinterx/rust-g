@@ -1,6 +1,6 @@
 //! Job system
 use flume::Receiver;
-use std::{collections::hash_map::{Entry, HashMap}, sync::mpsc};
+use std::{collections::hash_map::{Entry, HashMap}};
 use workerpool::{Pool, Builder};
 use workerpool::thunk::{ThunkWorker, Thunk};
 use std::cell::RefCell;
@@ -19,7 +19,7 @@ const JOB_PANICKED: &str = "JOB PANICKED";
 struct Jobs {
     map: HashMap<JobId, Job>,
     next_job: usize,
-    pool: Pool::<ThunkWorker<Output>>
+    pool: Pool::<ThunkWorker<()>>
 }
 
 impl Jobs {
@@ -29,7 +29,7 @@ impl Jobs {
             log::warn!("Job queue filling up (active {}, queued {})", self.pool.active_count(), self.pool.queued_count());
         }
 
-        self.pool.execute_to(tx, Thunk::of(f));
+        self.pool.execute(Thunk::of(move || tx.send(f()).unwrap()));
         let id = self.next_job.to_string();
         self.next_job += 1;
         self.map.insert(id.clone(), Job { rx });
