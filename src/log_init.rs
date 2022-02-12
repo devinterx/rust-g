@@ -10,12 +10,19 @@ use chrono::{DateTime, Utc};
 
 #[cfg(feature = "feature-log-panics")]
 pub fn log_init() {
-    simple_logging::log_to(
-        OpenOptions::new()
-            .append(true).create(true).read(true)
-            .open("data/logs/rust_g.log").unwrap(),
-        LevelFilter::Info
-    );
+
+    let file = OpenOptions::new()
+        .append(true).create(true).read(true)
+        .open("data/logs/rust_g.log");
+
+    if let Ok(file) = file {
+        simple_logging::log_to(
+            file,
+            LevelFilter::Info
+        )
+    } else {
+        simple_logging::log_to_stderr(LevelFilter::Info)
+    }
 
     log_panics::init();
 
